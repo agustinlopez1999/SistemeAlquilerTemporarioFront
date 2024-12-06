@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const userId = 2; // Cambiar según el usuario deseado
   cargarPropiedades(userId);
-
+  cargarAlquileres(userId);
   const btnAgregarPropiedad = document.getElementById("btn-agregar-propiedad");
   btnAgregarPropiedad.addEventListener("click", () => abrirModal());
 
@@ -170,5 +170,36 @@ async function eliminarPropiedad(id, userId) {
     cargarPropiedades(userId);
   } catch (error) {
     console.error(`Error al eliminar la propiedad: ${error.message}`);
+  }
+}
+
+async function cargarAlquileres(userId) {
+  try {
+    const response = await fetch(
+      `https://sistemealquilertemporario-production.up.railway.app/alquileres/usuario/${userId}`
+    );
+    if (!response.ok) {
+      throw new Error("Error al obtener los alquileres");
+    }
+    const alquileres = await response.json();
+
+    const listaAlquileres = document.getElementById("lista-alquileres");
+    listaAlquileres.innerHTML = ""; // Limpia la lista antes de renderizar
+
+    alquileres.forEach((alquiler) => {
+      const alquilerCard = document.createElement("div");
+      alquilerCard.className = "alquiler-card";
+
+      alquilerCard.innerHTML = `
+        <h4>${alquiler.propiedad}</h4>
+        <p>Fecha Inicio: ${alquiler.fecha_inicio}</p>
+        <p>Fecha Fin: ${alquiler.fecha_fin}</p>
+        <p>Monto: $${alquiler.monto}</p>
+      `;
+
+      listaAlquileres.appendChild(alquilerCard);
+    });
+  } catch (error) {
+    console.error("Error al cargar los alquileres:", error);
   }
 }
