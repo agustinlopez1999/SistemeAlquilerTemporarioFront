@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Alquileres Temporarios</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/script.js" defer></script>
   </head>
   <body>
     <header>
@@ -12,14 +13,40 @@
       <p>Bienvenido, Usuario</p>
     </header>
     <main>
-      <section id="alquileres">
-        <h2>Mis Alquileres</h2>
-        <div id="lista-alquileres" class="alquileres-container">
-          <!-- Alquileres cargados dinámicamente -->
+      <section>
+        <h2>Mis Propiedades</h2>
+        <div id="lista-propiedades" class="propiedades-container">
+          <!-- Aquí se cargarán dinámicamente las propiedades -->
         </div>
+        <button id="btn-agregar-propiedad" class="btn">
+          Agregar Propiedad
+        </button>
       </section>
+
+      <!-- Modal para agregar/editar propiedad -->
+      <div id="modal-propiedad" class="modal">
+        <div class="modal-content">
+          <span
+            class="close"
+            onclick="document.getElementById('modal-propiedad').style.display='none'"
+            >&times;</span
+          >
+          <h3 id="modal-titulo">Nueva Propiedad</h3>
+          <form id="form-propiedad">
+            <input type="hidden" id="id-propiedad" />
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" required />
+
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" required />
+
+            <label for="precio">Precio Diario:</label>
+            <input type="number" id="precio" step="0.01" required />
+
+            <button type="submit" id="btn-guardar" class="btn">Guardar</button>
+          </form>
+        </div>
+      </div>
     </main>
-    <script src="../js/alquileres.js"></script>
-    <script src="../js/script.js"></script>
   </body>
 </html>
