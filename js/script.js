@@ -31,8 +31,22 @@ async function cargarPropiedades(userId) {
       div.innerHTML = `
         <h3>${propiedad.nombre}</h3>
         <p><strong>Dirección:</strong> ${propiedad.direccion}</p>
+        <p><strong>Descripción:</strong> ${
+          propiedad.descripcion || "Sin descripción"
+        }</p>
         <p><strong>Precio Diario:</strong> $${
           propiedad.precio_alquiler_diario || 0
+        }</p>
+        <p><strong>Valor Propiedad:</strong> $${
+          propiedad.valor_propiedad || 0
+        }</p>
+        <p><strong>Habitaciones:</strong> ${
+          propiedad.cantidad_habitaciones || 0
+        }</p>
+        <p><strong>Ambientes:</strong> ${propiedad.cantidad_ambientes || 0}</p>
+        <p><strong>Baños:</strong> ${propiedad.cantidad_banos || 0}</p>
+        <p><strong>Capacidad Máxima:</strong> ${
+          propiedad.capacidad_maxima || 0
         }</p>
         <button class="btn editar" data-id="${
           propiedad.id_propiedad
@@ -64,6 +78,35 @@ async function cargarPropiedades(userId) {
   } catch (error) {
     console.error("Error al cargar las propiedades:", error);
   }
+}
+
+function editarPropiedad(id, propiedades) {
+  const propiedad = propiedades.find((p) => p.id_propiedad == id);
+
+  if (!propiedad) {
+    console.error(`Propiedad con ID ${id} no encontrada`);
+    return;
+  }
+
+  // Carga los datos de la propiedad en el modal
+  document.getElementById("id-propiedad").value = propiedad.id_propiedad;
+  document.getElementById("nombre").value = propiedad.nombre;
+  document.getElementById("direccion").value = propiedad.direccion;
+  document.getElementById("descripcion").value = propiedad.descripcion || "";
+  document.getElementById("precio").value = propiedad.precio_alquiler_diario;
+  document.getElementById("valor").value = propiedad.valor_propiedad || "";
+  document.getElementById("habitaciones").value =
+    propiedad.cantidad_habitaciones || "";
+  document.getElementById("ambientes").value =
+    propiedad.cantidad_ambientes || "";
+  document.getElementById("banos").value = propiedad.cantidad_banos || "";
+  document.getElementById("capacidad").value = propiedad.capacidad_maxima || "";
+
+  // Cambia el título del modal
+  document.getElementById("modal-titulo").innerText = "Editar Propiedad";
+
+  // Muestra el modal
+  document.getElementById("modal-propiedad").style.display = "block";
 }
 
 // Función para abrir el modal con los datos de una propiedad
@@ -116,14 +159,16 @@ async function guardarPropiedad(event, userId) {
 
   const form = event.target;
   const idPropiedad = form["id-propiedad"].value;
-  const nombre = form["nombre"].value;
-  const direccion = form["direccion"].value;
-  const precio_alquiler_diario = form["precio"].value;
-
   const propiedad = {
-    nombre,
-    direccion,
-    precio_alquiler_diario,
+    nombre: form["nombre"].value,
+    direccion: form["direccion"].value,
+    descripcion: form["descripcion"].value,
+    precio_alquiler_diario: form["precio"].value,
+    valor_propiedad: form["valor"].value,
+    cantidad_habitaciones: form["habitaciones"].value,
+    cantidad_ambientes: form["ambientes"].value,
+    cantidad_banos: form["banos"].value,
+    capacidad_maxima: form["capacidad"].value,
     id_usuario: userId,
   };
 

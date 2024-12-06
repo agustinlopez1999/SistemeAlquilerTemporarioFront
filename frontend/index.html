@@ -23,7 +23,7 @@
         </button>
       </section>
 
-      <!-- Modal para agregar/editar propiedad -->
+      <!-- Modal para agregar o editar propiedad -->
       <div id="modal-propiedad" class="modal">
         <div class="modal-content">
           <span
@@ -40,8 +40,26 @@
             <label for="direccion">Dirección:</label>
             <input type="text" id="direccion" required />
 
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" rows="3"></textarea>
+
             <label for="precio">Precio Diario:</label>
             <input type="number" id="precio" step="0.01" required />
+
+            <label for="valor">Valor de la Propiedad:</label>
+            <input type="number" id="valor" step="0.01" />
+
+            <label for="habitaciones">Cantidad de Habitaciones:</label>
+            <input type="number" id="habitaciones" />
+
+            <label for="ambientes">Cantidad de Ambientes:</label>
+            <input type="number" id="ambientes" />
+
+            <label for="banos">Cantidad de Baños:</label>
+            <input type="number" id="banos" />
+
+            <label for="capacidad">Capacidad Máxima:</label>
+            <input type="number" id="capacidad" />
 
             <button type="submit" id="btn-guardar" class="btn">Guardar</button>
           </form>
