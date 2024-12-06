@@ -16,100 +16,63 @@ const API_URL = "https://sistemealquilertemporario-production.up.railway.app";
 // Función para cargar propiedades desde la API
 async function cargarPropiedades(userId) {
   try {
-    console.log("Cargando propiedades para el usuario:", userId);
     const response = await fetch(`${API_URL}/propiedades/usuario/${userId}`);
     if (!response.ok) throw new Error("Error al cargar propiedades");
     const propiedades = await response.json();
 
     const listaPropiedades = document.getElementById("lista-propiedades");
-    listaPropiedades.innerHTML = "";
+    listaPropiedades.innerHTML = ""; // Limpia el contenedor antes de cargar nuevas propiedades
 
     propiedades.forEach((propiedad) => {
-      const div = document.createElement("div");
-      div.classList.add("propiedad-card");
-
-      div.innerHTML = `
-        <h3>${propiedad.nombre}</h3>
-        <p><strong>Dirección:</strong> ${propiedad.direccion}</p>
-        <p><strong>Descripción:</strong> ${
-          propiedad.descripcion || "Sin descripción"
-        }</p>
-        <p><strong>Precio Diario:</strong> $${
-          propiedad.precio_alquiler_diario || 0
-        }</p>
-        <p><strong>Valor Propiedad:</strong> $${
-          propiedad.valor_propiedad || 0
-        }</p>
-        <p><strong>Habitaciones:</strong> ${
-          propiedad.cantidad_habitaciones || 0
-        }</p>
-        <p><strong>Ambientes:</strong> ${propiedad.cantidad_ambientes || 0}</p>
-        <p><strong>Baños:</strong> ${propiedad.cantidad_banos || 0}</p>
-        <p><strong>Capacidad Máxima:</strong> ${
-          propiedad.capacidad_maxima || 0
-        }</p>
-        <button class="btn editar" data-id="${
-          propiedad.id_propiedad
-        }">Editar</button>
-        <button class="btn eliminar" data-id="${
-          propiedad.id_propiedad
-        }">Eliminar</button>
-      `;
-
-      listaPropiedades.appendChild(div);
+      listaPropiedades.appendChild(crearElementoPropiedad(propiedad, userId));
     });
-
-    // Asignar eventos a botones
-    document
-      .querySelectorAll(".editar")
-      .forEach((btn) =>
-        btn.addEventListener("click", (e) =>
-          editarPropiedad(e.target.dataset.id, propiedades)
-        )
-      );
-
-    document
-      .querySelectorAll(".eliminar")
-      .forEach((btn) =>
-        btn.addEventListener("click", (e) =>
-          confirmarEliminarPropiedad(e.target.dataset.id)
-        )
-      );
   } catch (error) {
     console.error("Error al cargar las propiedades:", error);
   }
 }
 
-function editarPropiedad(id, propiedades) {
-  const propiedad = propiedades.find((p) => p.id_propiedad == id);
+// Función para crear un elemento de propiedad
+function crearElementoPropiedad(propiedad, userId) {
+  const div = document.createElement("div");
+  div.classList.add("propiedad-card");
 
-  if (!propiedad) {
-    console.error(`Propiedad con ID ${id} no encontrada`);
-    return;
-  }
+  div.innerHTML = `
+    <h3>${propiedad.nombre}</h3>
+    <p><strong>Dirección:</strong> ${propiedad.direccion}</p>
+    <p><strong>Descripción:</strong> ${
+      propiedad.descripcion || "Sin descripción"
+    }</p>
+    <p><strong>Precio Diario:</strong> $${
+      propiedad.precio_alquiler_diario || 0
+    }</p>
+    <p><strong>Valor Propiedad:</strong> $${propiedad.valor_propiedad || 0}</p>
+    <p><strong>Habitaciones:</strong> ${
+      propiedad.cantidad_habitaciones || 0
+    }</p>
+    <p><strong>Ambientes:</strong> ${propiedad.cantidad_ambientes || 0}</p>
+    <p><strong>Baños:</strong> ${propiedad.cantidad_banos || 0}</p>
+    <p><strong>Capacidad Máxima:</strong> ${propiedad.capacidad_maxima || 0}</p>
+    <button class="btn editar" data-id="${
+      propiedad.id_propiedad
+    }">Editar</button>
+    <button class="btn eliminar" data-id="${
+      propiedad.id_propiedad
+    }">Eliminar</button>
+  `;
 
-  // Carga los datos de la propiedad en el modal
-  document.getElementById("id-propiedad").value = propiedad.id_propiedad;
-  document.getElementById("nombre").value = propiedad.nombre;
-  document.getElementById("direccion").value = propiedad.direccion;
-  document.getElementById("descripcion").value = propiedad.descripcion || "";
-  document.getElementById("precio").value = propiedad.precio_alquiler_diario;
-  document.getElementById("valor").value = propiedad.valor_propiedad || "";
-  document.getElementById("habitaciones").value =
-    propiedad.cantidad_habitaciones || "";
-  document.getElementById("ambientes").value =
-    propiedad.cantidad_ambientes || "";
-  document.getElementById("banos").value = propiedad.cantidad_banos || "";
-  document.getElementById("capacidad").value = propiedad.capacidad_maxima || "";
+  // Asignar eventos a los botones
+  const btnEditar = div.querySelector(".editar");
+  const btnEliminar = div.querySelector(".eliminar");
 
-  // Cambia el título del modal
-  document.getElementById("modal-titulo").innerText = "Editar Propiedad";
+  btnEditar.addEventListener("click", () => abrirModal(propiedad));
+  btnEliminar.addEventListener("click", () =>
+    confirmarEliminarPropiedad(propiedad.id_propiedad, userId)
+  );
 
-  // Muestra el modal
-  document.getElementById("modal-propiedad").style.display = "block";
+  return div;
 }
 
-// Función para abrir el modal
+// Función para abrir el modal para agregar o editar propiedad
 function abrirModal(propiedad = null) {
   const modal = document.getElementById("modal-propiedad");
   const titulo = document.getElementById("modal-titulo");
@@ -119,16 +82,24 @@ function abrirModal(propiedad = null) {
   form.reset();
 
   if (propiedad) {
-    titulo.textContent = "Editar Propiedad";
     form["id-propiedad"].value = propiedad.id_propiedad;
     form["nombre"].value = propiedad.nombre;
     form["direccion"].value = propiedad.direccion;
+    form["descripcion"].value = propiedad.descripcion || "";
     form["precio"].value = propiedad.precio_alquiler_diario;
+    form["valor"].value = propiedad.valor_propiedad || "";
+    form["habitaciones"].value = propiedad.cantidad_habitaciones || "";
+    form["ambientes"].value = propiedad.cantidad_ambientes || "";
+    form["banos"].value = propiedad.cantidad_banos || "";
+    form["capacidad"].value = propiedad.capacidad_maxima || "";
+
+    titulo.textContent = "Editar Propiedad";
   } else {
     titulo.textContent = "Nueva Propiedad";
   }
 }
 
+// Función para guardar (crear o editar) una propiedad
 // Función para guardar (crear o editar) una propiedad
 async function guardarPropiedad(event, userId) {
   event.preventDefault();
@@ -139,17 +110,16 @@ async function guardarPropiedad(event, userId) {
     nombre: form["nombre"].value,
     direccion: form["direccion"].value,
     descripcion: form["descripcion"].value,
-    precio_alquiler_diario: form["precio"].value,
-    valor_propiedad: form["valor"].value,
-    cantidad_habitaciones: form["habitaciones"].value,
-    cantidad_ambientes: form["ambientes"].value,
-    cantidad_banos: form["banos"].value,
-    capacidad_maxima: form["capacidad"].value,
+    precio_alquiler_diario: parseFloat(form["precio"].value),
+    valor_propiedad: parseFloat(form["valor"].value),
+    cantidad_habitaciones: parseInt(form["habitaciones"].value),
+    cantidad_ambientes: parseInt(form["ambientes"].value),
+    cantidad_banos: parseInt(form["banos"].value),
+    capacidad_maxima: parseInt(form["capacidad"].value),
     id_usuario: userId,
   };
 
   try {
-    console.log("Guardando propiedad:", propiedad);
     if (idPropiedad) {
       await fetch(`${API_URL}/propiedades/${idPropiedad}`, {
         method: "PUT",
@@ -166,34 +136,41 @@ async function guardarPropiedad(event, userId) {
 
     cargarPropiedades(userId);
     document.getElementById("modal-propiedad").style.display = "none";
+
+    // Limpia el formulario y el id-propiedad para evitar conflictos
+    form.reset();
+    form["id-propiedad"].value = "";
   } catch (error) {
     console.error("Error al guardar la propiedad:", error);
   }
 }
 
 // Función para eliminar una propiedad con confirmación
-function confirmarEliminarPropiedad(id) {
+function confirmarEliminarPropiedad(id, userId) {
   const confirmar = confirm(
     "¿Estás seguro de que deseas eliminar esta propiedad?"
   );
   if (confirmar) {
-    eliminarPropiedad(id);
+    eliminarPropiedad(id, userId);
   }
 }
 
 // Función para eliminar una propiedad
-async function eliminarPropiedad(id) {
+async function eliminarPropiedad(id, userId) {
   try {
-    console.log("Eliminando propiedad con ID:", id);
-    const response = await fetch(`${API_URL}/propiedades/${id}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `${API_URL}/propiedades/${id}?id_usuario=${userId}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-    if (!response.ok) throw new Error("Error al eliminar la propiedad");
+    if (!response.ok) {
+      throw new Error(`Error al eliminar la propiedad: ${response.statusText}`);
+    }
 
-    const userId = 1;
     cargarPropiedades(userId);
   } catch (error) {
-    console.error("Error al eliminar la propiedad:", error);
+    console.error(`Error al eliminar la propiedad: ${error.message}`);
   }
 }
