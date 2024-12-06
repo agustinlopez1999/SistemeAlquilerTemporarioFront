@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const userId = 1; // Cambiar según el usuario deseado
+  const userId = 2; // Cambiar según el usuario deseado
   cargarPropiedades(userId);
 
   const btnAgregarPropiedad = document.getElementById("btn-agregar-propiedad");
@@ -100,7 +100,6 @@ function abrirModal(propiedad = null) {
 }
 
 // Función para guardar (crear o editar) una propiedad
-// Función para guardar (crear o editar) una propiedad
 async function guardarPropiedad(event, userId) {
   event.preventDefault();
 
@@ -137,7 +136,6 @@ async function guardarPropiedad(event, userId) {
     cargarPropiedades(userId);
     document.getElementById("modal-propiedad").style.display = "none";
 
-    // Limpia el formulario y el id-propiedad para evitar conflictos
     form.reset();
     form["id-propiedad"].value = "";
   } catch (error) {
