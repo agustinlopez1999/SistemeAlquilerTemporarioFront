@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const API_URL = "https://sistemealquilertemporario-production.up.railway.app";
-  const userId = 1;
+  const userId = 1; // ID del usuario
 
   const propiedadesContainer = document.getElementById("lista-propiedades");
+  const gastosContainer = document.getElementById("lista-gastos");
   const modal = document.getElementById("modal-editar");
   const formEditar = document.getElementById("form-editar");
   const closeModal = document.querySelector(".modal .close");
@@ -29,7 +30,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         propiedadesContainer.appendChild(div);
       });
 
-      // Asignar eventos a los botones
       document
         .querySelectorAll(".btn-editar")
         .forEach((btn) =>
@@ -50,23 +50,55 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-  const abrirModalEdicion = async (idPropiedad) => {
+  async function cargarGastos() {
     try {
-      const propiedadResponse = await fetch(
-        `${API_URL}/propiedades/${idPropiedad}`
+      // Obtener propiedades del usuario
+      const propiedadesResponse = await fetch(
+        `${API_URL}/usuarios/${userId}/propiedades`
       );
-      const propiedad = await propiedadResponse.json();
+      if (!propiedadesResponse.ok) {
+        throw new Error(
+          `Error al cargar las propiedades: ${propiedadesResponse.status}`
+        );
+      }
+      const propiedades = await propiedadesResponse.json();
 
-      formEditar.nombre.value = propiedad.nombre;
-      formEditar.direccion.value = propiedad.direccion || "";
-      formEditar.precio.value = propiedad.precio_alquiler_diario;
+      const gastosContainer = document.getElementById("lista-gastos");
+      gastosContainer.innerHTML = ""; // Limpiar contenedor
 
-      formEditar.dataset.id = idPropiedad;
-      modal.style.display = "block";
+      // Recorrer las propiedades y cargar sus gastos
+      for (const propiedad of propiedades) {
+        const gastosResponse = await fetch(
+          `${API_URL}/gastos/${propiedad.id_propiedad}`
+        );
+        if (!gastosResponse.ok) {
+          throw new Error(
+            `Error al cargar los gastos para la propiedad ${propiedad.nombre}: ${gastosResponse.status}`
+          );
+        }
+        const gastos = await gastosResponse.json();
+
+        // Mostrar los gastos de esta propiedad
+        gastos.forEach((gasto) => {
+          const div = document.createElement("div");
+          div.classList.add("gasto");
+
+          // Validar si monto es un número válido
+          const monto = typeof gasto.monto === "number" ? gasto.monto : 0;
+
+          div.innerHTML = `
+            <h3>${gasto.descripcion}</h3>
+            <p>Propiedad: ${propiedad.nombre}</p>
+            <p>Fecha: ${new Date(gasto.fecha).toLocaleDateString()}</p>
+            <p>Monto: $${monto.toFixed(2)}</p>
+          `;
+          gastosContainer.appendChild(div);
+        });
+      }
     } catch (error) {
-      console.error("Error al obtener la propiedad:", error);
+      console.error("Error al cargar los gastos:", error);
     }
-  };
+  }
 
   const eliminarPropiedad = async (idPropiedad) => {
     if (!confirm("¿Estás seguro de eliminar esta propiedad?")) return;
@@ -123,4 +155,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   cargarPropiedades();
+  cargarGastos();
 });
