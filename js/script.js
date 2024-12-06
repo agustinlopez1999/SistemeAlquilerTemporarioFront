@@ -190,10 +190,16 @@ async function cargarAlquileres(userId) {
       const alquilerCard = document.createElement("div");
       alquilerCard.className = "alquiler-card";
 
+      // Formatear las fechas en formato corto
+      const fechaInicio = new Date(alquiler.fecha_inicio).toLocaleDateString(
+        "es-AR"
+      );
+      const fechaFin = new Date(alquiler.fecha_fin).toLocaleDateString("es-AR");
+
       alquilerCard.innerHTML = `
         <h4>${alquiler.propiedad}</h4>
-        <p>Fecha Inicio: ${alquiler.fecha_inicio}</p>
-        <p>Fecha Fin: ${alquiler.fecha_fin}</p>
+        <p>Fecha Inicio: ${fechaInicio}</p>
+        <p>Fecha Fin: ${fechaFin}</p>
         <p>Monto: $${alquiler.monto}</p>
       `;
 
