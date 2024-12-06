@@ -15,6 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
   formPropiedad.addEventListener("submit", (event) =>
     guardarPropiedad(event, userId)
   );
+
+  const formAlquiler = document.getElementById("form-alquiler");
+  formAlquiler.addEventListener("submit", (event) =>
+    guardarAlquiler(event, userId)
+  );
 });
 
 const API_URL = "https://sistemealquilertemporario-production.up.railway.app";
@@ -179,16 +184,13 @@ async function eliminarPropiedad(id, userId) {
   }
 }
 
+// Función para cargar alquileres del usuario
 async function cargarAlquileres(userId) {
   try {
-    const response = await fetch(
-      `https://sistemealquilertemporario-production.up.railway.app/alquileres/usuario/${userId}`
-    );
-    if (!response.ok) {
-      throw new Error("Error al obtener los alquileres");
-    }
-    const alquileres = await response.json();
+    const response = await fetch(`${API_URL}/alquileres/usuario/${userId}`);
+    if (!response.ok) throw new Error("Error al obtener los alquileres");
 
+    const alquileres = await response.json();
     const listaAlquileres = document.getElementById("lista-alquileres");
     listaAlquileres.innerHTML = ""; // Limpia la lista antes de renderizar
 
@@ -196,7 +198,6 @@ async function cargarAlquileres(userId) {
       const alquilerCard = document.createElement("div");
       alquilerCard.className = "alquiler-card";
 
-      // Formatear las fechas en formato corto
       const fechaInicio = new Date(alquiler.fecha_inicio).toLocaleDateString(
         "es-AR"
       );
@@ -215,14 +216,13 @@ async function cargarAlquileres(userId) {
     console.error("Error al cargar los alquileres:", error);
   }
 }
-
 // Función para abrir el modal de alquiler
 function abrirModalAlquiler(userId) {
   const modal = document.getElementById("modal-alquiler");
   modal.style.display = "block";
 
-  const propiedadSelect = document.getElementById("propiedad");
-  propiedadSelect.innerHTML = "";
+  const propiedadSelect = document.getElementById("propiedad-alquiler");
+  propiedadSelect.innerHTML = ""; // Limpia el selector antes de agregar opciones
 
   fetch(`${API_URL}/propiedades/usuario/${userId}`)
     .then((response) => response.json())
@@ -238,28 +238,40 @@ function abrirModalAlquiler(userId) {
 }
 
 // Función para guardar un alquiler
+// Función para guardar un alquiler
 async function guardarAlquiler(event, userId) {
   event.preventDefault();
 
-  const form = event.target;
+  const idPropiedad = document.getElementById("propiedad-alquiler").value;
+  const fechaInicio = document.getElementById("fecha-inicio").value;
+  const fechaFin = document.getElementById("fecha-fin").value;
+  const monto = parseFloat(document.getElementById("monto-alquiler").value);
+
   const alquiler = {
-    id_propiedad: parseInt(form["propiedad"].value),
-    fecha_inicio: form["fecha_inicio"].value,
-    fecha_fin: form["fecha_fin"].value,
-    monto: parseFloat(form["monto"].value),
+    id_propiedad: parseInt(idPropiedad, 10),
+    fecha_inicio: fechaInicio,
+    fecha_fin: fechaFin,
+    monto: monto,
   };
 
   try {
-    await fetch(`${API_URL}/alquileres`, {
+    const response = await fetch(`${API_URL}/alquileres`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(alquiler),
     });
 
+    if (!response.ok) {
+      throw new Error(`Error al registrar el alquiler: ${response.statusText}`);
+    }
+
     cargarAlquileres(userId);
     document.getElementById("modal-alquiler").style.display = "none";
-    form.reset();
+    document.getElementById("form-alquiler").reset();
   } catch (error) {
     console.error("Error al guardar el alquiler:", error);
+    alert("Hubo un error al registrar el alquiler. Intenta nuevamente.");
   }
 }

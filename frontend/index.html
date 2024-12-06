@@ -77,30 +77,29 @@
       <!-- Modal para agregar alquiler -->
       <div id="modal-alquiler" class="modal">
         <div class="modal-content">
-          <span
-            class="close"
-            onclick="document.getElementById('modal-alquiler').style.display='none'"
-            >&times;</span
-          >
-          <h3>Nuevo Alquiler</h3>
-          <form id="form-alquiler">
-            <label for="propiedad">Propiedad:</label>
-            <select id="propiedad" name="propiedad"></select>
-
-            <label for="fecha_inicio">Fecha de Inicio:</label>
-            <input type="date" id="fecha_inicio" name="fecha_inicio" required />
-
-            <label for="fecha_fin">Fecha de Fin:</label>
-            <input type="date" id="fecha_fin" name="fecha_fin" required />
-
-            <label for="monto">Monto:</label>
-            <input type="number" id="monto" name="monto" step="0.01" required />
-
-            <button type="submit" id="btn-guardar-alquiler" class="btn">
-              Guardar
-            </button>
-          </form>
+            <span
+                class="close"
+                onclick="document.getElementById('modal-alquiler').style.display='none'"
+            >&times;</span>
+            <h3>Nuevo Alquiler</h3>
+            <form id="form-alquiler">
+                <label for="propiedad-alquiler">Propiedad:</label>
+                <select id="propiedad-alquiler"></select>
+    
+                <label for="fecha-inicio">Fecha Inicio:</label>
+                <input type="date" id="fecha-inicio" required />
+    
+                <label for="fecha-fin">Fecha Fin:</label>
+                <input type="date" id="fecha-fin" required />
+    
+                <label for="monto-alquiler">Monto:</label>
+                <input type="number" id="monto-alquiler" step="0.01" required />
+    
+                <button type="submit" id="btn-guardar-alquiler">Guardar</button>
+            </form>
         </div>
+    </div>
+    
       </div>
     </main>
   </body>
