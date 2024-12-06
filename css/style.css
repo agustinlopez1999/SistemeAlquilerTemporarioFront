@@ -46,10 +46,9 @@ h2 {
 }
 
 /* Tarjetas de contenido */
-.alquiler-card,
-.gasto-card,
-.propiedad-card {
-  background-color: var(--color-cream);
+.propiedad-card,
+.alquiler-card {
+  background-color: #fff; /* Fondo blanco */
   border: 1px solid var(--color-taupe);
   border-radius: 10px;
   padding: 15px;
@@ -57,16 +56,14 @@ h2 {
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.alquiler-card h3,
-.gasto-card h3,
-.propiedad-card h3 {
+.propiedad-card h3,
+.alquiler-card h4 {
   margin-top: 0;
   color: var(--color-charcoal);
 }
 
-.alquiler-card p,
-.gasto-card p,
-.propiedad-card p {
+.propiedad-card p,
+.alquiler-card p {
   margin: 5px 0;
 }
 
@@ -169,17 +166,6 @@ button:hover {
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
-}
-
-.alquiler-card {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #fff;
-}
-
-.alquiler-card h4 {
-  margin: 0;
 }
 
 .modal select {
