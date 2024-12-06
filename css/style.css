@@ -181,3 +181,11 @@ button:hover {
 .alquiler-card h4 {
   margin: 0;
 }
+
+.modal select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid var(--color-taupe);
+  border-radius: 5px;
+  margin-bottom: 15px;
+}

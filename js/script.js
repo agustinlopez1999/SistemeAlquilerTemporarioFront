@@ -2,8 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const userId = 2; // Cambiar según el usuario deseado
   cargarPropiedades(userId);
   cargarAlquileres(userId);
+
   const btnAgregarPropiedad = document.getElementById("btn-agregar-propiedad");
   btnAgregarPropiedad.addEventListener("click", () => abrirModal());
+
+  const btnAgregarAlquiler = document.getElementById("btn-agregar-alquiler");
+  btnAgregarAlquiler.addEventListener("click", () =>
+    abrirModalAlquiler(userId)
+  );
 
   const formPropiedad = document.getElementById("form-propiedad");
   formPropiedad.addEventListener("submit", (event) =>
@@ -207,5 +213,53 @@ async function cargarAlquileres(userId) {
     });
   } catch (error) {
     console.error("Error al cargar los alquileres:", error);
+  }
+}
+
+// Función para abrir el modal de alquiler
+function abrirModalAlquiler(userId) {
+  const modal = document.getElementById("modal-alquiler");
+  modal.style.display = "block";
+
+  const propiedadSelect = document.getElementById("propiedad");
+  propiedadSelect.innerHTML = "";
+
+  fetch(`${API_URL}/propiedades/usuario/${userId}`)
+    .then((response) => response.json())
+    .then((propiedades) => {
+      propiedades.forEach((propiedad) => {
+        const option = document.createElement("option");
+        option.value = propiedad.id_propiedad;
+        option.textContent = propiedad.nombre;
+        propiedadSelect.appendChild(option);
+      });
+    })
+    .catch((error) => console.error("Error al cargar propiedades:", error));
+}
+
+// Función para guardar un alquiler
+async function guardarAlquiler(event, userId) {
+  event.preventDefault();
+
+  const form = event.target;
+  const alquiler = {
+    id_propiedad: parseInt(form["propiedad"].value),
+    fecha_inicio: form["fecha_inicio"].value,
+    fecha_fin: form["fecha_fin"].value,
+    monto: parseFloat(form["monto"].value),
+  };
+
+  try {
+    await fetch(`${API_URL}/alquileres`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(alquiler),
+    });
+
+    cargarAlquileres(userId);
+    document.getElementById("modal-alquiler").style.display = "none";
+    form.reset();
+  } catch (error) {
+    console.error("Error al guardar el alquiler:", error);
   }
 }
