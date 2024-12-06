@@ -109,30 +109,6 @@ function editarPropiedad(id, propiedades) {
   document.getElementById("modal-propiedad").style.display = "block";
 }
 
-// Función para abrir el modal con los datos de una propiedad
-function editarPropiedad(id, propiedades) {
-  const propiedad = propiedades.find((p) => p.id_propiedad == id);
-
-  if (!propiedad) {
-    console.error(`Propiedad con ID ${id} no encontrada`);
-    return;
-  }
-
-  // Carga los datos de la propiedad en el modal
-  document.getElementById("id-propiedad").value = propiedad.id_propiedad;
-  document.getElementById("nombre").value = propiedad.nombre;
-  document.getElementById("direccion").value = propiedad.direccion;
-  document.getElementById("precio").value = propiedad.precio_alquiler_diario;
-
-  // Cambia el título del modal
-  document.getElementById("modal-titulo").innerText = "Editar Propiedad";
-
-  // Muestra el modal
-  document.getElementById("modal-propiedad").style.display = "block";
-}
-
-window.editarPropiedad = editarPropiedad;
-
 // Función para abrir el modal
 function abrirModal(propiedad = null) {
   const modal = document.getElementById("modal-propiedad");
