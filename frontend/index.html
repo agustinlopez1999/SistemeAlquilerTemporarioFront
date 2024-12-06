@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Usuario</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="../js/script.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>Gestión de Alquileres Temporarios</h1>
+      <p>Bienvenido, Usuario</p>
+    </header>
+    <main>
+      <div id="lista-propiedades" class="propiedades-container">
+        <!-- Aquí se cargarán las propiedades dinámicamente -->
+      </div>
+      <section id="gastos">
+        <h2>Mis Gastos</h2>
+        <div id="lista-gastos"></div>
+      </section>
+      <section id="alquileres">
+        <h2>Mis Alquileres</h2>
+        <div id="lista-alquileres" class="alquileres-container"></div>
+      </section>
+      <section id="reportes">
+        <h2>Reportes Financieros</h2>
+        <div id="reporte-financiero"></div>
+      </section>
+      <section id="acciones">
+        <button id="agregar-propiedad">Agregar Propiedad</button>
+        <button id="agregar-gasto">Agregar Gasto</button>
+      </section>
+      <div id="modal-editar" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h3>Editar Propiedad</h3>
+          <form id="form-editar">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required />
+
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" />
+
+            <label for="precio">Precio diario:</label>
+            <input
+              type="number"
+              id="precio"
+              name="precio"
+              step="0.01"
+              required
+            />
+
+            <button type="submit" class="btn btn-edit">Guardar Cambios</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
