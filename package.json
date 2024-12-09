@@ -1,0 +1,12 @@
+{
+  "name": "sisteme-alquiler-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para el sistema de alquiler temporario",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve . -p $PORT"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}
