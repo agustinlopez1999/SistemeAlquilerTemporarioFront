@@ -63,6 +63,9 @@ function crearElementoPropiedad(propiedad, userId) {
     <p><strong>Ambientes:</strong> ${propiedad.cantidad_ambientes || 0}</p>
     <p><strong>Baños:</strong> ${propiedad.cantidad_banos || 0}</p>
     <p><strong>Capacidad Máxima:</strong> ${propiedad.capacidad_maxima || 0}</p>
+    <p><strong>Estado:</strong> <span class="status">${
+      propiedad.status || "Desconocido"
+    }</span></p>
     <button class="btn editar" data-id="${
       propiedad.id_propiedad
     }">Editar</button>
@@ -208,6 +211,7 @@ async function cargarAlquileres(userId) {
         <p>Fecha Inicio: ${fechaInicio}</p>
         <p>Fecha Fin: ${fechaFin}</p>
         <p>Monto: $${alquiler.monto}</p>
+        <p>Estado: <strong>${alquiler.status}</strong></p>
       `;
 
       listaAlquileres.appendChild(alquilerCard);
