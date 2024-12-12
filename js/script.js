@@ -106,6 +106,7 @@ function abrirModal(propiedad = null) {
     form["ambientes"].value = propiedad.cantidad_ambientes || "";
     form["banos"].value = propiedad.cantidad_banos || "";
     form["capacidad"].value = propiedad.capacidad_maxima || "";
+    form["status"].value = propiedad.status || "activo";
 
     titulo.textContent = "Editar Propiedad";
   } else {
@@ -129,6 +130,7 @@ async function guardarPropiedad(event, userId) {
     cantidad_ambientes: parseInt(form["ambientes"].value),
     cantidad_banos: parseInt(form["banos"].value),
     capacidad_maxima: parseInt(form["capacidad"].value),
+    status: form["status"] ? form["status"].value : "activo",
     id_usuario: userId,
   };
 
