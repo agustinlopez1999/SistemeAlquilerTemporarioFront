@@ -119,41 +119,48 @@ async function guardarPropiedad(event, userId) {
   event.preventDefault();
 
   const form = event.target;
-  const idPropiedad = form["id-propiedad"].value;
+  const nombre = form["nombre"].value.trim();
+  const direccion = form["direccion"].value.trim();
+  const precio = form["precio"].value.trim();
+  const valor = form["valor"].value.trim();
+
+  // Validaciones
+  if (!nombre || !direccion || !precio || !valor) {
+    alert("Todos los campos marcados son obligatorios.");
+    return;
+  }
+
   const propiedad = {
-    nombre: form["nombre"].value,
-    direccion: form["direccion"].value,
-    descripcion: form["descripcion"].value,
-    precio_alquiler_diario: parseFloat(form["precio"].value),
-    valor_propiedad: parseFloat(form["valor"].value),
-    cantidad_habitaciones: parseInt(form["habitaciones"].value),
-    cantidad_ambientes: parseInt(form["ambientes"].value),
-    cantidad_banos: parseInt(form["banos"].value),
-    capacidad_maxima: parseInt(form["capacidad"].value),
+    nombre: nombre,
+    direccion: direccion,
+    descripcion: form["descripcion"].value.trim(),
+    precio_alquiler_diario: parseFloat(precio),
+    valor_propiedad: parseFloat(valor),
+    cantidad_habitaciones: parseInt(form["habitaciones"].value) || 0,
+    cantidad_ambientes: parseInt(form["ambientes"].value) || 0,
+    cantidad_banos: parseInt(form["banos"].value) || 0,
+    capacidad_maxima: parseInt(form["capacidad"].value) || 0,
     status: form["status"] ? form["status"].value : "activo",
     id_usuario: userId,
   };
 
   try {
-    if (idPropiedad) {
-      await fetch(`${API_URL}/propiedades/${idPropiedad}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(propiedad),
-      });
-    } else {
-      await fetch(`${API_URL}/propiedades`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(propiedad),
-      });
-    }
+    const idPropiedad = form["id-propiedad"].value;
+    const url = idPropiedad
+      ? `${API_URL}/propiedades/${idPropiedad}`
+      : `${API_URL}/propiedades`;
+    const method = idPropiedad ? "PUT" : "POST";
+
+    await fetch(url, {
+      method: method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(propiedad),
+    });
 
     cargarPropiedades(userId);
     document.getElementById("modal-propiedad").style.display = "none";
 
     form.reset();
-    form["id-propiedad"].value = "";
   } catch (error) {
     console.error("Error al guardar la propiedad:", error);
   }
@@ -244,20 +251,27 @@ function abrirModalAlquiler(userId) {
 }
 
 // Función para guardar un alquiler
-// Función para guardar un alquiler
 async function guardarAlquiler(event, userId) {
   event.preventDefault();
 
-  const idPropiedad = document.getElementById("propiedad-alquiler").value;
-  const fechaInicio = document.getElementById("fecha-inicio").value;
-  const fechaFin = document.getElementById("fecha-fin").value;
-  const monto = parseFloat(document.getElementById("monto-alquiler").value);
+  const idPropiedad = document
+    .getElementById("propiedad-alquiler")
+    .value.trim();
+  const fechaInicio = document.getElementById("fecha-inicio").value.trim();
+  const fechaFin = document.getElementById("fecha-fin").value.trim();
+  const monto = document.getElementById("monto-alquiler").value.trim();
+
+  // Validaciones
+  if (!idPropiedad || !fechaInicio || !fechaFin || !monto) {
+    alert("Todos los campos son obligatorios.");
+    return;
+  }
 
   const alquiler = {
     id_propiedad: parseInt(idPropiedad, 10),
     fecha_inicio: fechaInicio,
     fecha_fin: fechaFin,
-    monto: monto,
+    monto: parseFloat(monto),
   };
 
   try {
